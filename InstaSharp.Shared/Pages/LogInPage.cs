@@ -5,9 +5,11 @@ namespace InstaSharp.Shared.Pages
 {
     public class LogInPage : LoggedOutBasePage
     {
+        private readonly HomePage homePage;
+
         protected override string UrlPath => "/";
 
-        public LogInPage(IWebDriver driver) : base(driver) { }
+        public LogInPage(IWebDriver driver, HomePage homePage) : base(driver) => this.homePage = homePage;
 
         public string username
         {
@@ -21,8 +23,12 @@ namespace InstaSharp.Shared.Pages
             set => SetText(By.Name("password"), value);
         }
 
-        public void LoginButton() => driver.FindElement(By.XPath("//form//button[@type='submit']")).Click();
+        public HomePage LoginButton()
+        {
+            driver.FindElement(By.XPath("//form//button[@type='submit']")).Click();
+            return homePage;
+        }
 
-        public void LoginWithFaceBookButton() => driver.FindElement(By.XPath("//form//span[contains(@class, 'coreSpriteFacebookIcon')]")).Click();
+        public void LoginWithFaceBookButton() => driver.FindElement(By.XPath("//form//button[./span[contains(@class, 'Facebook')]]")).Click();
     }
 }
