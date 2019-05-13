@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstaSharp.App", "InstaSharp.App\InstaSharp.App.csproj", "{FCC65F63-3BCF-45E2-9426-6B2E3949DED8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstaSharp.Shared", "InstaSharp.Shared\InstaSharp.Shared.csproj", "{7C433186-B85B-446C-B14B-DB750A8A1987}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FCC65F63-3BCF-45E2-9426-6B2E3949DED8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCC65F63-3BCF-45E2-9426-6B2E3949DED8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCC65F63-3BCF-45E2-9426-6B2E3949DED8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCC65F63-3BCF-45E2-9426-6B2E3949DED8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C433186-B85B-446C-B14B-DB750A8A1987}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C433186-B85B-446C-B14B-DB750A8A1987}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C433186-B85B-446C-B14B-DB750A8A1987}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C433186-B85B-446C-B14B-DB750A8A1987}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E982F92A-D49E-4AB2-B03E-66BE4E448B7F}
+	EndGlobalSection
+EndGlobal
