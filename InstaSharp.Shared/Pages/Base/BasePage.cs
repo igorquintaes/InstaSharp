@@ -1,4 +1,7 @@
-﻿using OpenQA.Selenium;
+﻿using InstaSharp.Shared.Enum;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
+using System;
 
 namespace InstaSharp.Shared.Pages.Base
 {
@@ -14,5 +17,26 @@ namespace InstaSharp.Shared.Pages.Base
         public void Navigate(params string[] args) => 
             driver.Navigate()
                   .GoToUrl(baseUrl + string.Format(UrlPath, args));
+
+        public void ChangeLanguage(object language, SelectType selectType)
+        {
+            var languageSelect = new SelectElement(
+                driver.FindElement(By.CssSelector("footer select")));
+
+            switch (selectType)
+            {
+                case SelectType.Index:
+                    languageSelect.SelectByIndex(Convert.ToInt32(language));
+                    break;
+                case SelectType.Text:
+                    languageSelect.SelectByText(language.ToString());
+                    break;
+                case SelectType.Value:
+                    languageSelect.SelectByValue(language.ToString());
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
     }
 }
