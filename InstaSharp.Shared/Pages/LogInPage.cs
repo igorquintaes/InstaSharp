@@ -7,24 +7,26 @@ namespace InstaSharp.Shared.Pages
     {
         private readonly HomePage homePage;
         private readonly SignUpPage signUpPage;
+        private readonly FaceBookPage faceBookPage;
 
         protected override string UrlPath => "/accounts/login";
 
-        public LogInPage(IWebDriver driver, HomePage homePage, SignUpPage signUpPage) : base(driver)
+        public LogInPage(IWebDriver driver, HomePage homePage, SignUpPage signUpPage, FaceBookPage faceBookPage) : base(driver)
         {
             this.homePage = homePage;
             this.signUpPage = signUpPage;
+            this.faceBookPage = faceBookPage;
         }
 
-        public string username
+        public string Username
         {
             get => driver.FindElement(By.Name("username")).Text;
             set => SetText(By.Name("username"), value);
         }
 
-        public string password
+        public string Password
         {
-            get => driver.FindElement(By.Name("password")).Text;
+            get => driver.FindElement(By.Name("password")).GetAttribute("value");
             set => SetText(By.Name("password"), value);
         }
 
@@ -34,7 +36,11 @@ namespace InstaSharp.Shared.Pages
             return homePage;
         }
 
-        public void LoginWithFaceBookButton() => driver.FindElement(By.XPath("//form//button[./span[contains(@class, 'Facebook')]]")).Click();
+        public FaceBookPage LoginWithFaceBookButton()
+        {
+            driver.FindElement(By.XPath("//form//button[./span[contains(@class, 'Facebook')]]")).Click();
+            return faceBookPage;
+        }
 
         public SignUpPage SignUpButton()
         {
