@@ -38,5 +38,11 @@ namespace InstaSharp.Shared.Pages.Base
                     throw new ArgumentOutOfRangeException();
             }
         }
+
+        public void SetText(By by, object value)
+        {
+            driver.FindElement(by).Clear();
+            driver.FindElement(by).SendKeys(value.ToString());
+        }
     }
 }
