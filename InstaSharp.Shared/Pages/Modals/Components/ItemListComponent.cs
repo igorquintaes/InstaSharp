@@ -54,18 +54,13 @@ namespace InstaSharp.Shared.Pages.Modals.Components
                 nodeDocument.LoadHtml(itemNode.InnerHtml);
 
                 var title = nodeDocument.DocumentNode
-                    .SelectSingleNode("(//a)[2]")
-                    ?.InnerText
-                ?? nodeDocument.DocumentNode
-                    .SelectSingleNode("//a")
-                    ?.InnerText;
+                    .SelectSingleNode("(//a)[2] | //a")
+                    .InnerText;
 
                 var description = nodeDocument.DocumentNode
-                    .SelectSingleNode($"//div[./div/a[@title='{title}']]/div[2]")
-                    ?.InnerText
-                ?? nodeDocument.DocumentNode
-                    .SelectSingleNode($"//div[.//a[text()='{title}']]//span/span")
-                    ?.InnerText;
+                    .SelectSingleNode($"//div[./div/a[@title='{title}']]/div[2] |" +
+                                      $"//div[.//a[text()='{title}']]//span/span")
+                    .InnerText;
 
                 var imageUrl = nodeDocument.DocumentNode
                     .SelectSingleNode("//img")
