@@ -41,7 +41,7 @@ namespace InstaSharp.Shared.Pages
 
             void SkipInstagranDownload(IWebDriver driver)
             {
-                if (driver.Url == "https://www.instagram.com/#reactivated")
+                if (driver.Url.Equals("https://www.instagram.com/#reactivated"))
                     driver.FindElement(By.XPath("//a[@href='/']")).Click();
             }
 
