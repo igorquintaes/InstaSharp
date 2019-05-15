@@ -1,5 +1,7 @@
 ﻿using InstaSharp.Shared.Pages.Base;
 using OpenQA.Selenium;
+using System.Linq;
+using System.Threading;
 
 namespace InstaSharp.Shared.Pages
 {
@@ -33,7 +35,28 @@ namespace InstaSharp.Shared.Pages
         public HomePage LoginButton()
         {
             driver.FindElement(By.XPath("//form//button[@type='submit']")).Click();
+            SkipInstagranDownload(driver);
+            SkipInstagranNotifications(driver);
             return homePage;
+
+            void SkipInstagranDownload(IWebDriver driver)
+            {
+                if (driver.Url == "https://www.instagram.com/#reactivated")
+                    driver.FindElement(By.XPath("//a[@href='/']")).Click();
+            }
+
+            void SkipInstagranNotifications(IWebDriver driver)
+            {
+                var notificationPopUp = driver
+                    .FindElements(By.XPath("//div[@role='presentation']//button[2]"))
+                    .FirstOrDefault(x => x.Displayed);
+
+                if (notificationPopUp != null)
+                {
+                    notificationPopUp.Click();
+                    Thread.Sleep(3000);
+                }
+            }
         }
 
         public FaceBookPage LoginWithFaceBookButton()
