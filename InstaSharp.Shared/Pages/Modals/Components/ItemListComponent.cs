@@ -5,6 +5,7 @@ using InstaSharp.Shared.PageObjects;
 using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace InstaSharp.Shared.Pages.Modals.Components
 {
@@ -12,7 +13,7 @@ namespace InstaSharp.Shared.Pages.Modals.Components
     {
         private readonly IWebDriver driver;
 
-        public ItemListComponent(IWebDriver driver) => 
+        public ItemListComponent(IWebDriver driver) =>
             this.driver = driver;
 
         public IEnumerable<ItemList> Obtain(int maxQuantity)
@@ -45,10 +46,10 @@ namespace InstaSharp.Shared.Pages.Modals.Components
                 {
                     itemNodes = document.DocumentNode.SelectNodes("div");
                     break;
-                }                
+                }
             } while (true);
 
-            foreach(var itemNode in itemNodes)
+            foreach (var itemNode in itemNodes)
             {
                 var nodeDocument = new HtmlDocument();
                 nodeDocument.LoadHtml(itemNode.InnerHtml);
@@ -76,8 +77,28 @@ namespace InstaSharp.Shared.Pages.Modals.Components
         public void Unfollow(ItemList itemList) =>
             Unfollow(itemList.Title);
 
-        public void Unfollow(string user丨Hashtag) =>
-            throw new NotImplementedException();
+        public void Unfollow(string user丨Hashtag)
+        {
+            var buttonXPath =
+                $"//*[@role='dialog']//li[.//a[@title='{user丨Hashtag}']]//button |" +
+                $"//*[@role='dialog']/nav/following-sibling::div[.//a[text()='{user丨Hashtag}']]//button";
+
+            var button = driver
+                .FindElements(By.XPath(buttonXPath))
+                .FirstOrDefault();
+
+            if (button == null || button.GetCssValue("color") == "#fff")
+                return;
+
+            button.Click();
+            driver.Wait().Until(x => x
+                .FindElement(By.XPath("(//*[@role='dialog'])[2]//button[1]")))
+                .Click();
+
+            driver.Wait().Until(x => 
+                x.FindElement(By.XPath(buttonXPath))
+                 .GetCssValue("color") == "#fff");
+        }
 
         public void Follow(ItemList itemList) =>
             Follow(itemList.Title);
