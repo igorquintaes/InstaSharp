@@ -9,10 +9,10 @@ namespace InstaSharp.UnitTests.Specs.Extensions
 {
     public class IWebElementExtensionsTest : BaseTest
     {
-        public class AdjustElementExibitionTest: IWebElementExtensionsTest
+        public class AdjustElementExibitionTest : IWebElementExtensionsTest
         {
             [Test]
-            public void ShouldReturnWebElement()
+            public void ShouldReturnTheSameWebElementPassedByParameter()
             {
                 A.CallTo(() => fakeDriver
                     .As<IJavaScriptExecutor>()
@@ -48,7 +48,7 @@ namespace InstaSharp.UnitTests.Specs.Extensions
             }
         }
 
-        public class ScrollElementTest: IWebElementExtensionsTest
+        public class ScrollElementTest : IWebElementExtensionsTest
         {
             [Test]
             public void ShouldExecuteScriptOnce()
