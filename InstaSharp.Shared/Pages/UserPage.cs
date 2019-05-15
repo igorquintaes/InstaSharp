@@ -20,18 +20,17 @@ namespace InstaSharp.Shared.Pages
             this.userFollowersModal = userFollowersModal;
 
         public int PostQuantity => Convert.ToInt32(
-            driver.FindElement(By.XPath("//*[@role='main']//header//ul/li[1]/span"))
-                  .Text.Split(' ').Last());
+            driver.FindElement(By.XPath("//*[@role='main']//header//ul/li[1]/span/span"))
+                  .Text.OnlyNumbers());
 
-        public int Followers => Convert.ToInt32(
+        public int FollowersQuantity => Convert.ToInt32(
             driver.FindElement(By.XPath("(//section//li)[2]/a/span"))
                   .GetAttribute("title")
-                  .Replace(",", ""));
+                  .OnlyNumbers());
 
-        public int Following => Convert.ToInt32(
+        public int FollowingQuantity => Convert.ToInt32(
             driver.FindElement(By.XPath("(//section//li)[3]/a/span"))
-                  .Text
-                  .Replace(",", ""));
+                  .Text.OnlyNumbers());
 
         public string Name => driver
             .FindElement(By.XPath("(//*[@role='main']//header//h1)[2]"))
