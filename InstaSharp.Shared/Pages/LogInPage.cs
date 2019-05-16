@@ -1,4 +1,5 @@
-﻿using InstaSharp.Shared.Pages.Base;
+﻿using InstaSharp.Shared.Extensions;
+using InstaSharp.Shared.Pages.Base;
 using OpenQA.Selenium;
 using System.Linq;
 using System.Threading;
@@ -35,6 +36,10 @@ namespace InstaSharp.Shared.Pages
         public HomePage LoginButton()
         {
             driver.FindElement(By.XPath("//form//button[@type='submit']")).Click();
+            driver.Wait().Until(x =>
+                x.Url == "https://www.instagram.com/#reactivated" ||
+                x.Url == "https://www.instagram.com");
+
             SkipInstagranDownload(driver);
             SkipInstagranNotifications(driver);
             return homePage;

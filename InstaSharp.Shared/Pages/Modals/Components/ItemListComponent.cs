@@ -5,6 +5,8 @@ using InstaSharp.Shared.PageObjects;
 using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 
 namespace InstaSharp.Shared.Pages.Modals.Components
 {
@@ -12,10 +14,10 @@ namespace InstaSharp.Shared.Pages.Modals.Components
     {
         private readonly IWebDriver driver;
 
-        public ItemListComponent(IWebDriver driver) => 
+        public ItemListComponent(IWebDriver driver) =>
             this.driver = driver;
 
-        public IEnumerable<ItemList> Obtain(int maxQuantity)
+        public List<ItemList> Obtain(int maxQuantity)
         {
             if (maxQuantity > 1000 || maxQuantity <= 0)
                 throw new ArgumentException("Quantity is not a valid value, or higher than we support.");
@@ -38,29 +40,40 @@ namespace InstaSharp.Shared.Pages.Modals.Components
                         break;
 
                     foundNodesQuantity = itemNodes.Count;
-                    driver.FindElement(By.XPath($"(//li)[{foundNodesQuantity}]"))
+                    driver.FindElement(By.XPath($"(//*[@role='dialog']//li)[{foundNodesQuantity}]"))
                           .ScrollElement(driver);
+
+                    try
+                    {
+                        driver.Wait().Until(x => x.FindElements(By.XPath($"//*[@role='dialog']//li"))
+                              .Count > foundNodesQuantity);
+
+                        Thread.Sleep(300);
+                    }
+                    catch { }
                 }
                 else
                 {
                     itemNodes = document.DocumentNode.SelectNodes("div");
                     break;
-                }                
+                }
             } while (true);
 
-            foreach(var itemNode in itemNodes)
+            var itemList = new List<ItemList>();
+            foreach (var itemNode in itemNodes)
             {
                 var nodeDocument = new HtmlDocument();
                 nodeDocument.LoadHtml(itemNode.InnerHtml);
 
                 var title = nodeDocument.DocumentNode
-                    .SelectSingleNode("(//a)[2] | //a")
+                    .SelectNodes("(//a)[2] | //a")
+                    .FirstOrDefault(x => !string.IsNullOrEmpty(x.InnerText))
                     .InnerText;
 
                 var description = nodeDocument.DocumentNode
                     .SelectSingleNode($"//div[./div/a[@title='{title}']]/div[2] |" +
                                       $"//div[.//a[text()='{title}']]//span/span")
-                    .InnerText;
+                    ?.InnerText;
 
                 var imageUrl = nodeDocument.DocumentNode
                     .SelectSingleNode("//img")
@@ -69,15 +82,41 @@ namespace InstaSharp.Shared.Pages.Modals.Components
                 var status = System.Enum.Parse<FollowerStatus>(
                     nodeDocument.DocumentNode.SelectSingleNode("//button").InnerText);
 
-                yield return new ItemList(title, description, imageUrl, status);
+                itemList.Add(new ItemList(title, description, imageUrl, status));
             }
+
+            return itemList;
         }
 
         public void Unfollow(ItemList itemList) =>
             Unfollow(itemList.Title);
 
-        public void Unfollow(string user丨Hashtag) =>
-            throw new NotImplementedException();
+        public void Unfollow(string user丨Hashtag)
+        {
+            var buttonXPath =
+                $"//*[@role='dialog']//li[.//a[@title='{user丨Hashtag}']]//button |" +
+                $"//*[@role='dialog']/nav/following-sibling::div[./div//a[text()='{user丨Hashtag}']]//button";
+
+            var button = driver
+                .FindElements(By.XPath(buttonXPath))
+                .FirstOrDefault();
+
+            if (button == null || 
+                button.GetCssValue("color") == "#fff" ||
+                button.GetCssValue("color") == "rgba(255, 255, 255, 1)")
+                return;
+
+            var c = button.GetCssValue("color");
+
+            button.Click();
+            driver.Wait().Until(x => x
+                .FindElement(By.XPath("(//*[@role='dialog'])[2]//button[1]")))
+                .Click();
+
+            driver.Wait().Until(x => 
+                x.FindElement(By.XPath(buttonXPath))
+                 .GetCssValue("color") == "rgba(255, 255, 255, 1)");
+        }
 
         public void Follow(ItemList itemList) =>
             Follow(itemList.Title);
